@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
+import MenuScene from './scenes/MenuScene.js';
 import GameScene from './scenes/GameScene.js';
+import GameOverScene from './scenes/GameOverScene.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,7 +17,7 @@ const config = {
         }
     },
     pixelArt: true,
-    scene: [GameScene]
+    scene: [MenuScene, GameScene, GameOverScene]
 };
 
 const game = new Phaser.Game(config);

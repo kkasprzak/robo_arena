@@ -128,13 +128,13 @@ Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z w
 ### 🕑 ETAP 2: Combat System (60 min) - 11:00-12:00
 **Cel:** Gracz strzela, wrogowie się spawną i umierają
 
-- [ ] System strzelania (pociski w kierunku kursora)
-- [ ] Spawning wrogów (losowe pozycje przy krawędziach)
-- [ ] Podstawowa AI wroga (chase player)
-- [ ] Kolizje: pocisk-wróg, wróg-gracz
-- [ ] Śmierć wroga (znika + punkty)
-- [ ] HP gracza (damage od wrogów)
-- [ ] **Milestone:** Można zabijać wrogów i otrzymywać damage
+- [x] System strzelania (pociski w kierunku kursora)
+- [x] Spawning wrogów (losowe pozycje przy krawędziach)
+- [x] Podstawowa AI wroga (chase player)
+- [x] Kolizje: pocisk-wróg, wróg-gracz
+- [x] Śmierć wroga (znika + punkty)
+- [x] HP gracza (damage od wrogów)
+- [x] **Milestone:** Można zabijać wrogów i otrzymywać damage
 
 **Output:** Działający combat loop
 
@@ -143,13 +143,13 @@ Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z w
 ### 🕒 ETAP 3: Game Loop & Waves (60 min) - 12:00-13:00
 **Cel:** Kompletna gra z początkiem, końcem i systemem fal
 
-- [ ] Start screen (Play button)
-- [ ] Game Over screen (Score + Restart)
-- [ ] System punktacji (UI)
-- [ ] Wave system (licznik fali, rosnąca trudność)
-- [ ] Przerwy między falami (3-5 sekund)
-- [ ] HP UI (serca/bar)
-- [ ] **Milestone:** Można zagrać pełną rundę od start do game over
+- [x] Start screen (Play button)
+- [x] Game Over screen (Score + Restart)
+- [x] System punktacji (UI)
+- [x] Wave system (licznik fali, rosnąca trudność)
+- [x] Przerwy między falami (3-5 sekund)
+- [x] HP UI (serca/bar)
+- [x] **Milestone:** Można zagrać pełną rundę od start do game over
 
 **Output:** Kompletny game loop MVP
 

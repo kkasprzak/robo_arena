@@ -35,6 +35,16 @@ export default class GameScene extends Phaser.Scene {
         // System punktacji
         this.score = 0;
 
+        // Wave System
+        this.currentWave = 1;
+        this.enemiesInWave = 5; // Start z 5 wrogami
+        this.enemiesSpawned = 0;
+        this.enemiesKilled = 0;
+        this.waveActive = false;
+        this.betweenWaves = true;
+        this.spawnTimer = null;
+        this.gameOverCalled = false; // Flaga zapobiegająca wielokrotnemu wywołaniu
+
         // Kolizje: pocisk-wróg
         this.physics.add.overlap(
             this.bulletsGroup,
@@ -53,16 +63,27 @@ export default class GameScene extends Phaser.Scene {
             this
         );
 
-        // Timer spawnu wrogów (co 2-3 sekundy)
-        this.spawnTimer = this.time.addEvent({
-            delay: Phaser.Math.Between(2000, 3000),
-            callback: this.spawnEnemy,
-            callbackScope: this,
-            loop: true
-        });
+        // UI - Score
+        this.scoreText = this.add.text(20, 20, 'Score: 0', {
+            fontSize: '24px',
+            fill: '#00ff00',
+            fontFamily: 'monospace'
+        }).setScrollFactor(0);
 
-        // Pierwszy spawn wroga po krótkim opóźnieniu
-        this.time.delayedCall(1000, this.spawnEnemy, [], this);
+        // UI - Wave
+        this.waveText = this.add.text(400, 20, 'WAVE 1', {
+            fontSize: '28px',
+            fill: '#00ff00',
+            fontFamily: 'monospace',
+            fontStyle: 'bold'
+        }).setOrigin(0.5).setScrollFactor(0);
+
+        // UI - HP (serca)
+        this.hpHearts = [];
+        this.updateHPUI();
+
+        // Start pierwszej fali po 3 sekundach
+        this.time.delayedCall(3000, this.startWave, [], this);
 
         // Konfiguracja kamery i viewport
         // Ustawienie granic kamery (równych granicom areny)
@@ -80,15 +101,54 @@ export default class GameScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        // Sprawdź czy gracz umarł (przed aktualizacją)
+        if (this.player && this.player.hp <= 0 && !this.gameOverCalled) {
+            this.gameOver();
+            return; // Zatrzymaj aktualizację jeśli gracz umarł
+        }
+
         // Aktualizacja gracza (ruch + strzelanie)
-        if (this.player) {
+        if (this.player && this.player.active) {
             this.player.update(time, delta);
         }
+
+        // Aktualizacja UI
+        this.updateHPUI();
 
         // Grupy automatycznie aktualizują aktywne dzieci (runChildUpdate: true)
     }
 
+    startWave() {
+        this.betweenWaves = false;
+        this.waveActive = true;
+        this.enemiesSpawned = 0;
+        this.enemiesKilled = 0;
+        
+        // Aktualizuj UI fali
+        this.waveText.setText(`WAVE ${this.currentWave}`);
+
+        // Spawn pierwszego wroga natychmiast
+        this.spawnEnemy();
+
+        // Timer spawnu wrogów w fali (co 1-2 sekundy)
+        this.spawnTimer = this.time.addEvent({
+            delay: Phaser.Math.Between(1000, 2000),
+            callback: this.spawnEnemy,
+            callbackScope: this,
+            loop: true
+        });
+    }
+
     spawnEnemy() {
+        // Sprawdz czy możemy spawnować więcej wrogów w tej fali
+        if (!this.waveActive || this.enemiesSpawned >= this.enemiesInWave) {
+            if (this.spawnTimer) {
+                this.spawnTimer.remove();
+                this.spawnTimer = null;
+            }
+            return;
+        }
+
         // Spawning poza ekranem (margin ~50px od krawędzi)
         const margin = 50;
         let x, y;
@@ -125,8 +185,78 @@ export default class GameScene extends Phaser.Scene {
             this.enemiesGroup.add(newEnemy);
         }
 
-        // Losowy czas do następnego spawnu (2-3 sekundy)
-        this.spawnTimer.delay = Phaser.Math.Between(2000, 3000);
+        this.enemiesSpawned++;
+
+        // Losowy czas do następnego spawnu (1-2 sekundy)
+        if (this.spawnTimer && this.enemiesSpawned < this.enemiesInWave) {
+            this.spawnTimer.delay = Phaser.Math.Between(1000, 2000);
+        }
+    }
+
+    checkWaveComplete() {
+        // Sprawdź czy wszyscy wrogowie z fali są zabici
+        const activeEnemies = this.enemiesGroup.children.entries.filter(e => e.active);
+        
+        if (this.waveActive && this.enemiesSpawned >= this.enemiesInWave && activeEnemies.length === 0) {
+            // Fala zakończona
+            this.waveActive = false;
+            this.betweenWaves = true;
+            this.currentWave++;
+            this.enemiesInWave += 2; // +2 wrogów na każdą falę
+            
+            // Przerwa między falami (3-5 sekund)
+            const breakTime = Phaser.Math.Between(3000, 5000);
+            this.time.delayedCall(breakTime, this.startWave, [], this);
+            
+            // Aktualizuj UI podczas przerwy
+            this.waveText.setText(`WAVE ${this.currentWave - 1} COMPLETE!`);
+            this.time.delayedCall(breakTime - 500, () => {
+                if (this.waveText) {
+                    this.waveText.setText(`WAVE ${this.currentWave} STARTING...`);
+                }
+            }, [], this);
+        }
+    }
+
+    updateHPUI() {
+        if (!this.player) return;
+
+        // Usuń stare serca jeśli istnieją
+        this.hpHearts.forEach(heart => {
+            if (heart) heart.destroy();
+        });
+        this.hpHearts = [];
+
+        // Utwórz nowe serca
+        const heartSize = 24;
+        const startX = 800 - 20 - (this.player.maxHP * (heartSize + 5));
+        const y = 20;
+
+        for (let i = 0; i < this.player.maxHP; i++) {
+            const heart = this.add.text(startX + i * (heartSize + 5), y, '♥', {
+                fontSize: `${heartSize}px`,
+                fill: i < this.player.hp ? '#ff0000' : '#444444',
+                fontFamily: 'monospace'
+            }).setScrollFactor(0);
+            this.hpHearts.push(heart);
+        }
+    }
+
+    gameOver() {
+        // Zapobiegaj wielokrotnemu wywołaniu
+        if (this.gameOverCalled) return;
+        this.gameOverCalled = true;
+
+        // Zatrzymaj wszystkie timery
+        if (this.spawnTimer) {
+            this.spawnTimer.remove();
+        }
+
+        // Przejdź do GameOverScene z wynikiem
+        this.scene.start('GameOverScene', {
+            score: this.score,
+            wave: this.currentWave
+        });
     }
 
     hitEnemy(bullet, enemy) {
@@ -143,8 +273,15 @@ export default class GameScene extends Phaser.Scene {
         if (isDead) {
             // Wróg zmarł - dodaj punkty i usuń
             this.score += 10;
+            this.enemiesKilled++;
             enemy.setActive(false);
             enemy.setVisible(false);
+            
+            // Aktualizuj UI score
+            this.scoreText.setText(`Score: ${this.score}`);
+            
+            // Sprawdź czy fala zakończona
+            this.checkWaveComplete();
         }
     }
 
@@ -157,6 +294,12 @@ export default class GameScene extends Phaser.Scene {
 
         // Gracz otrzymuje obrażenia
         player.takeDamage(1);
+
+        // Sprawdź czy gracz umarł po otrzymaniu obrażeń
+        if (player.hp <= 0 && !this.gameOverCalled) {
+            this.gameOver();
+            return;
+        }
 
         // Krótka nietykalność (invincibility frames)
         player.setInvincible(1000); // 1 sekunda

@@ -98,7 +98,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hp -= amount;
         if (this.hp <= 0) {
             this.hp = 0;
-            // TODO: Game Over (w następnym kroku)
+            this.setActive(false);
         }
     }
 
