@@ -114,9 +114,9 @@ Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z w
 ### 🕐 ETAP 1: Setup & Fundament (60 min) - 10:00-11:00
 **Cel:** Działający projekt z graczem poruszającym się po arenie
 
-- [ ] Setup projektu (Vite + Phaser 3)
-- [ ] Podstawowa struktura plików
-- [ ] Stworzenie areny (granice)
+- [x] Setup projektu (Vite + Phaser 3)
+- [x] Podstawowa struktura plików
+- [x] Stworzenie areny (granice)
 - [ ] Gracz sprite + ruch (8 kierunków)
 - [ ] Kamera i viewport
 - [ ] **Milestone:** Gracz porusza się po arenie, nie wychodzi poza granice
