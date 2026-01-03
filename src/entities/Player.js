@@ -2,25 +2,15 @@ import Phaser from 'phaser';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, bulletsGroup) {
-        // Tworzenie placeholder grafiki (zielony z obramówką)
-        if (!scene.textures.exists('player')) {
-            const graphics = scene.add.graphics();
-            // Wypełnienie zielone
-            graphics.fillStyle(0x00ff00);
-            graphics.fillRect(2, 2, 28, 28);
-            // Obramówka jaśniejsza zielona
-            graphics.lineStyle(2, 0x88ff88);
-            graphics.strokeRect(1, 1, 30, 30);
-            graphics.generateTexture('player', 32, 32);
-            graphics.destroy();
-        }
-
-        // Wywołanie konstruktora rodzica
+        // Tekstura 'player' jest ładowana w preload()
         super(scene, x, y, 'player');
 
         // Dodanie do sceny i fizyki
         scene.add.existing(this);
         scene.physics.add.existing(this);
+
+        // Skalowanie sprite'a (sprite z Kenney jest większy niż placeholder)
+        this.setScale(0.224);
 
         // Ustawienie kolizji z granicami świata
         this.setCollideWorldBounds(true);
@@ -80,13 +70,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Ustawienie velocity (używa this.speed, który może być zmodyfikowany przez power-up)
         this.setVelocity(moveX * this.speed, moveY * this.speed);
 
+        // Obracanie sprite'a w kierunku kursora myszy
+        // Korekta kąta: sprite z Kenney jest skierowany w górę, więc odejmujemy 90 stopni (Math.PI/2)
+        const pointer = this.scene.input.activePointer;
+        const angle = Phaser.Math.Angle.Between(this.x, this.y, pointer.worldX, pointer.worldY) - Math.PI / 2;
+        this.setRotation(angle);
+
         // Aktualizacja cooldown strzelania
         if (this.shootCooldown > 0) {
             this.shootCooldown -= delta;
         }
 
         // Strzelanie (lewy przycisk myszy)
-        const pointer = this.scene.input.activePointer;
         if (pointer.isDown && this.shootCooldown <= 0) {
             this.shoot(pointer.worldX, pointer.worldY);
             this.shootCooldown = this.shootDelay;

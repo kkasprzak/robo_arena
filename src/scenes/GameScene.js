@@ -9,6 +9,11 @@ export default class GameScene extends Phaser.Scene {
         super({ key: 'GameScene' });
     }
 
+    preload() {
+        // Ładowanie sprite'a gracza
+        this.load.image('player', 'assets/sprites/player.png');
+    }
+
     create() {
         // Ustawienie granic świata gry
         this.physics.world.setBounds(0, 0, 800, 600);
