@@ -2,12 +2,18 @@ import Phaser from 'phaser';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, bulletsGroup) {
-        // Tworzenie placeholder grafiki (kolorowy prostokąt)
-        const graphics = scene.add.graphics();
-        graphics.fillStyle(0x00ff00); // Zielony kolor
-        graphics.fillRect(0, 0, 32, 32);
-        graphics.generateTexture('player', 32, 32);
-        graphics.destroy();
+        // Tworzenie placeholder grafiki (zielony z obramówką)
+        if (!scene.textures.exists('player')) {
+            const graphics = scene.add.graphics();
+            // Wypełnienie zielone
+            graphics.fillStyle(0x00ff00);
+            graphics.fillRect(2, 2, 28, 28);
+            // Obramówka jaśniejsza zielona
+            graphics.lineStyle(2, 0x88ff88);
+            graphics.strokeRect(1, 1, 30, 30);
+            graphics.generateTexture('player', 32, 32);
+            graphics.destroy();
+        }
 
         // Wywołanie konstruktora rodzica
         super(scene, x, y, 'player');
@@ -36,6 +42,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hp = this.maxHP;
         this.isInvincible = false;
         this.invincibilityTimer = null;
+
+        // Power-up efekty
+        this.baseSpeed = 200; // Bazowa prędkość
+        this.baseShootDelay = 150; // Bazowe opóźnienie strzału
+        this.speedBoostTimer = null;
+        this.fireRateBoostTimer = null;
     }
 
     update(time, delta) {
@@ -65,7 +77,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             moveY *= 0.707;
         }
 
-        // Ustawienie velocity
+        // Ustawienie velocity (używa this.speed, który może być zmodyfikowany przez power-up)
         this.setVelocity(moveX * this.speed, moveY * this.speed);
 
         // Aktualizacja cooldown strzelania
@@ -134,6 +146,38 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.isInvincible = false;
             this.invincibilityTimer = null;
             this.setAlpha(1); // Upewnij się, że alpha jest resetowane
+        });
+    }
+
+    applySpeedBoost(duration) {
+        // Anuluj poprzedni timer jeśli istnieje
+        if (this.speedBoostTimer) {
+            this.scene.time.removeEvent(this.speedBoostTimer);
+        }
+
+        // Zwiększ prędkość o 50% (speed * 1.5)
+        this.speed = this.baseSpeed * 1.5;
+
+        // Ustaw timer na reset prędkości
+        this.speedBoostTimer = this.scene.time.delayedCall(duration, () => {
+            this.speed = this.baseSpeed;
+            this.speedBoostTimer = null;
+        });
+    }
+
+    applyFireRateBoost(duration) {
+        // Anuluj poprzedni timer jeśli istnieje
+        if (this.fireRateBoostTimer) {
+            this.scene.time.removeEvent(this.fireRateBoostTimer);
+        }
+
+        // Zmniejsz opóźnienie strzału o połowę (strzelanie 2x szybciej)
+        this.shootDelay = this.baseShootDelay / 2;
+
+        // Ustaw timer na reset opóźnienia strzału
+        this.fireRateBoostTimer = this.scene.time.delayedCall(duration, () => {
+            this.shootDelay = this.baseShootDelay;
+            this.fireRateBoostTimer = null;
         });
     }
 }

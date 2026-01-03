@@ -2,11 +2,18 @@ import Phaser from 'phaser';
 
 export default class Bullet extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        // Tworzenie placeholder grafiki (mały żółty prostokąt)
+        // Tworzenie placeholder grafiki (jasnożółty z glow efektem)
         if (!scene.textures.exists('bullet')) {
             const graphics = scene.add.graphics();
-            graphics.fillStyle(0xffff00); // Żółty kolor
-            graphics.fillRect(0, 0, 8, 8);
+            // Zewnętrzny glow (jaśniejszy, większy)
+            graphics.fillStyle(0xffff88, 0.5);
+            graphics.fillCircle(4, 4, 5);
+            // Główny pocisk (jasnożółty)
+            graphics.fillStyle(0xffff00);
+            graphics.fillCircle(4, 4, 3);
+            // Środek (jasny biały)
+            graphics.fillStyle(0xffffff);
+            graphics.fillCircle(4, 4, 1.5);
             graphics.generateTexture('bullet', 8, 8);
             graphics.destroy();
         }

@@ -158,15 +158,15 @@ Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z w
 ### 🕓 ETAP 4: Polish & Features (60 min) - 13:00-14:00
 **Cel:** Dodanie power-upów, efektów, różnorodności
 
-- [ ] Power-upy (minimum 2 typy)
+- [x] Power-upy (minimum 2 typy)
   - Speed boost
   - Fire rate boost
-- [ ] Drugi typ wroga (np. fast enemy)
-- [ ] Particle effects (eksplozje przy śmierci)
-- [ ] Screen shake (przy trafieniu gracza)
-- [ ] Lepsze sprites/kolory
+- [x] Drugi typ wroga (np. fast enemy)
+- [x] Particle effects (eksplozje przy śmierci)
+- [x] Screen shake (przy trafieniu gracza)
+- [x] Lepsze sprites/kolory
 - [ ] Sound effects (opcjonalnie, jeśli szybko idzie)
-- [ ] **Milestone:** Gra jest "juicy" i przyjemna w graniu
+- [x] **Milestone:** Gra jest "juicy" i przyjemna w graniu
 
 **Output:** Wypolerowana gra z efektami
 

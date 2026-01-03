@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from '../entities/Player.js';
 import Bullet from '../entities/Bullet.js';
 import Enemy from '../entities/Enemy.js';
+import PowerUp from '../entities/PowerUp.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -15,6 +16,15 @@ export default class GameScene extends Phaser.Scene {
         // Wizualne granice areny
         this.add.rectangle(400, 300, 800, 600, 0x000000, 0).setStrokeStyle(2, 0x00ff00);
 
+        // Tworzenie tekstury dla cząsteczek (małe białe kółko)
+        if (!this.textures.exists('particle')) {
+            const graphics = this.add.graphics();
+            graphics.fillStyle(0xffffff);
+            graphics.fillCircle(0, 0, 4);
+            graphics.generateTexture('particle', 8, 8);
+            graphics.destroy();
+        }
+
         // Utworzenie grupy pocisków z object pooling
         this.bulletsGroup = this.physics.add.group({
             classType: Bullet,
@@ -26,6 +36,13 @@ export default class GameScene extends Phaser.Scene {
         this.enemiesGroup = this.physics.add.group({
             classType: Enemy,
             maxSize: 30, // Maksymalna liczba wrogów
+            runChildUpdate: true // Automatyczna aktualizacja dzieci
+        });
+
+        // Utworzenie grupy power-upów z object pooling
+        this.powerUpsGroup = this.physics.add.group({
+            classType: PowerUp,
+            maxSize: 10, // Maksymalna liczba power-upów w puli
             runChildUpdate: true // Automatyczna aktualizacja dzieci
         });
 
@@ -63,6 +80,15 @@ export default class GameScene extends Phaser.Scene {
             this
         );
 
+        // Kolizje: gracz-powerup
+        this.physics.add.overlap(
+            this.player,
+            this.powerUpsGroup,
+            this.collectPowerUp,
+            null,
+            this
+        );
+
         // UI - Score
         this.scoreText = this.add.text(20, 20, 'Score: 0', {
             fontSize: '24px',
@@ -81,6 +107,16 @@ export default class GameScene extends Phaser.Scene {
         // UI - HP (serca)
         this.hpHearts = [];
         this.updateHPUI();
+
+        // UI - Power-ups (aktywne efekty)
+        this.powerUpText = this.add.text(20, 560, '', {
+            fontSize: '18px',
+            fill: '#ffff00',
+            fontFamily: 'monospace'
+        }).setScrollFactor(0);
+
+        // Particle emitter dla eksplozji (będzie resetowany przy każdej eksplozji)
+        this.explosionEmitter = null;
 
         // Start pierwszej fali po 3 sekundach
         this.time.delayedCall(3000, this.startWave, [], this);
@@ -114,6 +150,7 @@ export default class GameScene extends Phaser.Scene {
 
         // Aktualizacja UI
         this.updateHPUI();
+        this.updatePowerUpUI();
 
         // Grupy automatycznie aktualizują aktywne dzieci (runChildUpdate: true)
     }
@@ -173,15 +210,21 @@ export default class GameScene extends Phaser.Scene {
                 break;
         }
 
+        // Losowy wybór typu wroga (30% fast od fali 2+)
+        let enemyType = 'normal';
+        if (this.currentWave >= 2 && Phaser.Math.Between(1, 100) <= 30) {
+            enemyType = 'fast';
+        }
+
         // Pobieranie wroga z puli lub tworzenie nowego
         const enemy = this.enemiesGroup.get(x, y);
         
         if (enemy) {
             // Resetowanie wroga (dla recyklingu)
-            enemy.reset(x, y);
+            enemy.reset(x, y, enemyType);
         } else {
             // Jeśli pula jest pełna, tworzymy nowego wroga
-            const newEnemy = new Enemy(this, x, y);
+            const newEnemy = new Enemy(this, x, y, enemyType);
             this.enemiesGroup.add(newEnemy);
         }
 
@@ -242,6 +285,26 @@ export default class GameScene extends Phaser.Scene {
         }
     }
 
+    updatePowerUpUI() {
+        if (!this.player || !this.powerUpText) return;
+
+        const activeEffects = [];
+        
+        if (this.player.speedBoostTimer) {
+            activeEffects.push('⚡ SPEED BOOST');
+        }
+        
+        if (this.player.fireRateBoostTimer) {
+            activeEffects.push('🔥 FIRE RATE BOOST');
+        }
+
+        if (activeEffects.length > 0) {
+            this.powerUpText.setText(activeEffects.join('  |  '));
+        } else {
+            this.powerUpText.setText('');
+        }
+    }
+
     gameOver() {
         // Zapobiegaj wielokrotnemu wywołaniu
         if (this.gameOverCalled) return;
@@ -271,9 +334,18 @@ export default class GameScene extends Phaser.Scene {
         bullet.setVisible(false);
 
         if (isDead) {
+            // Eksplozja przy śmierci wroga
+            this.createExplosion(enemy.x, enemy.y, enemy.enemyType);
+            
             // Wróg zmarł - dodaj punkty i usuń
             this.score += 10;
             this.enemiesKilled++;
+            
+            // 20% szans na drop power-upa
+            if (Phaser.Math.Between(1, 100) <= 20) {
+                this.spawnPowerUp(enemy.x, enemy.y);
+            }
+            
             enemy.setActive(false);
             enemy.setVisible(false);
             
@@ -295,6 +367,9 @@ export default class GameScene extends Phaser.Scene {
         // Gracz otrzymuje obrażenia
         player.takeDamage(1);
 
+        // Screen shake przy trafieniu
+        this.cameras.main.shake(100, 0.01);
+
         // Sprawdź czy gracz umarł po otrzymaniu obrażeń
         if (player.hp <= 0 && !this.gameOverCalled) {
             this.gameOver();
@@ -303,6 +378,65 @@ export default class GameScene extends Phaser.Scene {
 
         // Krótka nietykalność (invincibility frames)
         player.setInvincible(1000); // 1 sekunda
+    }
+
+    spawnPowerUp(x, y) {
+        // Losowy typ power-upa
+        const types = ['speed', 'firerate'];
+        const type = Phaser.Math.RND.pick(types);
+
+        // Pobieranie power-upa z puli lub tworzenie nowego
+        const powerUp = this.powerUpsGroup.get(x, y);
+        
+        if (powerUp) {
+            // Resetowanie power-upa (dla recyklingu)
+            powerUp.reset(x, y, type);
+        } else {
+            // Jeśli pula jest pełna, tworzymy nowego power-upa
+            const newPowerUp = new PowerUp(this, x, y, type);
+            this.powerUpsGroup.add(newPowerUp);
+        }
+    }
+
+    collectPowerUp(player, powerUp) {
+        if (!powerUp.active) return;
+
+        // Aplikuj efekt w zależności od typu
+        if (powerUp.type === 'speed') {
+            player.applySpeedBoost(powerUp.duration);
+        } else if (powerUp.type === 'firerate') {
+            player.applyFireRateBoost(powerUp.duration);
+        }
+
+        // Deaktywacja power-upa (zwrot do puli)
+        powerUp.setActive(false);
+        powerUp.setVisible(false);
+    }
+
+    createExplosion(x, y, enemyType) {
+        // Kolor eksplozji dopasowany do typu wroga
+        const color = enemyType === 'fast' ? 0xff8800 : 0xff0000; // Pomarańczowy dla fast, czerwony dla normal
+        
+        // Liczba cząstek (8-12)
+        const particleCount = Phaser.Math.Between(8, 12);
+        
+        // Utworzenie tymczasowego emitera dla tej eksplozji
+        const emitter = this.add.particles(x, y, 'particle', {
+            speed: { min: 50, max: 150 },
+            scale: { start: 0.8, end: 0 },
+            lifespan: 200,
+            quantity: particleCount,
+            tint: color,
+            emitting: false
+        });
+        
+        // Jednorazowa eksplozja
+        emitter.explode(particleCount);
+        
+        // Usuń emiter po zakończeniu animacji
+        this.time.delayedCall(250, () => {
+            emitter.destroy();
+        });
     }
 }
 
