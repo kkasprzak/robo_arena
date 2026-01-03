@@ -30,6 +30,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.shootCooldown = 0;
         this.shootDelay = 150; // ms między strzałami (~6 strzałów/s)
         this.bulletsGroup = bulletsGroup; // Referencja do grupy pocisków
+
+        // System HP
+        this.maxHP = 3;
+        this.hp = this.maxHP;
+        this.isInvincible = false;
+        this.invincibilityTimer = null;
     }
 
     update(time, delta) {
@@ -84,6 +90,51 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             // Resetowanie pocisku (dla recyklingu) lub pierwsze użycie
             bullet.reset(this.x, this.y, targetX, targetY);
         }
+    }
+
+    takeDamage(amount) {
+        if (this.isInvincible) return;
+
+        this.hp -= amount;
+        if (this.hp <= 0) {
+            this.hp = 0;
+            // TODO: Game Over (w następnym kroku)
+        }
+    }
+
+    setInvincible(duration) {
+        this.isInvincible = true;
+        
+        // Anuluj poprzedni timer jeśli istnieje
+        if (this.invincibilityTimer) {
+            this.scene.time.removeEvent(this.invincibilityTimer);
+        }
+
+        // Wizualna informacja o nietykalności (miganie)
+        const blinkInterval = 100; // ms między miganiami
+        const blinkCount = Math.floor(duration / blinkInterval);
+        let blinkCounter = 0;
+
+        const blinkTimer = this.scene.time.addEvent({
+            delay: blinkInterval,
+            callback: () => {
+                this.setAlpha(this.alpha === 1 ? 0.5 : 1);
+                blinkCounter++;
+                if (blinkCounter >= blinkCount) {
+                    this.setAlpha(1); // Przywróć pełną widoczność
+                    this.scene.time.removeEvent(blinkTimer);
+                }
+            },
+            callbackScope: this,
+            repeat: blinkCount - 1
+        });
+
+        // Ustaw timer na wyłączenie nietykalności
+        this.invincibilityTimer = this.scene.time.delayedCall(duration, () => {
+            this.isInvincible = false;
+            this.invincibilityTimer = null;
+            this.setAlpha(1); // Upewnij się, że alpha jest resetowane
+        });
     }
 }
 
