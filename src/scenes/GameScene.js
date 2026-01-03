@@ -10,12 +10,12 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        // Ładowanie sprite'a gracza
-        this.load.image('player', 'assets/sprites/player.png');
+        // Ładowanie sprite'a gracza (używamy ścieżki bezwzględnej z base path dla GitHub Pages)
+        this.load.image('player', '/robo_arena/assets/sprites/player.png');
         
         // Ładowanie dźwięków
-        this.load.audio('shoot', 'assets/sounds/shoot.wav');
-        this.load.audio('explosion', 'assets/sounds/explosion.wav');
+        this.load.audio('shoot', '/robo_arena/assets/sounds/shoot.wav');
+        this.load.audio('explosion', '/robo_arena/assets/sounds/explosion.wav');
     }
 
     create() {
