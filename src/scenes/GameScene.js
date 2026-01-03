@@ -12,6 +12,10 @@ export default class GameScene extends Phaser.Scene {
     preload() {
         // Ładowanie sprite'a gracza
         this.load.image('player', 'assets/sprites/player.png');
+        
+        // Ładowanie dźwięków
+        this.load.audio('shoot', 'assets/sounds/shoot.wav');
+        this.load.audio('explosion', 'assets/sounds/explosion.wav');
     }
 
     create() {
@@ -339,6 +343,9 @@ export default class GameScene extends Phaser.Scene {
         bullet.setVisible(false);
 
         if (isDead) {
+            // Odtwarzanie dźwięku eksplozji
+            this.sound.play('explosion');
+            
             // Eksplozja przy śmierci wroga
             this.createExplosion(enemy.x, enemy.y, enemy.enemyType);
             

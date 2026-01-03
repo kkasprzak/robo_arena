@@ -89,6 +89,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     shoot(targetX, targetY) {
+        // Odtwarzanie dźwięku strzału
+        this.scene.sound.play('shoot');
+        
         // Pobieranie pocisku z puli (object pooling)
         // get() zwraca pierwszy nieaktywny pocisk lub tworzy nowy jeśli brak
         const bullet = this.bulletsGroup.get(this.x, this.y);
