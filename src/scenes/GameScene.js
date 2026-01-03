@@ -31,10 +31,23 @@ export default class GameScene extends Phaser.Scene {
         this.cameras.main.centerOn(400, 300);
     }
 
-    update() {
-        // Aktualizacja gracza (ruch)
+    update(time, delta) {
+        // Aktualizacja gracza (ruch + strzelanie)
         if (this.player) {
-            this.player.update();
+            this.player.update(time, delta);
+        }
+
+        // Aktualizacja pocisków
+        if (this.player && this.player.bullets) {
+            // Aktualizacja każdego pocisku
+            this.player.bullets.forEach(bullet => {
+                if (bullet && bullet.active) {
+                    bullet.update();
+                }
+            });
+            
+            // Czyszczenie zniszczonych pocisków
+            this.player.bullets = this.player.bullets.filter(bullet => bullet && bullet.active);
         }
     }
 }

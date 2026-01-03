@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import Bullet from './Bullet.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
@@ -25,9 +26,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // Input handling
         this.cursors = scene.input.keyboard.createCursorKeys();
         this.wasdKeys = scene.input.keyboard.addKeys('W,S,A,D');
+
+        // System strzelania
+        this.shootCooldown = 0;
+        this.shootDelay = 150; // ms między strzałami (~6 strzałów/s)
+        this.bullets = []; // Tymczasowa tablica pocisków (w Kroku 3 będzie grupa)
     }
 
-    update() {
+    update(time, delta) {
         // Reset velocity
         this.setVelocity(0, 0);
 
@@ -56,6 +62,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Ustawienie velocity
         this.setVelocity(moveX * this.speed, moveY * this.speed);
+
+        // Aktualizacja cooldown strzelania
+        if (this.shootCooldown > 0) {
+            this.shootCooldown -= delta;
+        }
+
+        // Strzelanie (lewy przycisk myszy)
+        const pointer = this.scene.input.activePointer;
+        if (pointer.isDown && this.shootCooldown <= 0) {
+            this.shoot(pointer.worldX, pointer.worldY);
+            this.shootCooldown = this.shootDelay;
+        }
+    }
+
+    shoot(targetX, targetY) {
+        // Tworzenie pocisku na pozycji gracza
+        const bullet = new Bullet(this.scene, this.x, this.y);
+        bullet.fire(this.x, this.y, targetX, targetY);
+        
+        // Dodanie do tymczasowej tablicy (w Kroku 3 będzie grupa)
+        this.bullets.push(bullet);
     }
 }
 
