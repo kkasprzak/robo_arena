@@ -10,9 +10,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        // Ładowanie sprite'a gracza (ścieżka względna do roota - Vite obsługuje base path w index.html)
-        this.load.image('player', 'assets/sprites/player.png');
-        
         // Ładowanie dźwięków
         this.load.audio('shoot', 'assets/sounds/shoot.wav');
         this.load.audio('explosion', 'assets/sounds/explosion.wav');
