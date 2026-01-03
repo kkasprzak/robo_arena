@@ -117,9 +117,9 @@ Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z w
 - [x] Setup projektu (Vite + Phaser 3)
 - [x] Podstawowa struktura plików
 - [x] Stworzenie areny (granice)
-- [ ] Gracz sprite + ruch (8 kierunków)
-- [ ] Kamera i viewport
-- [ ] **Milestone:** Gracz porusza się po arenie, nie wychodzi poza granice
+- [x] Gracz sprite + ruch (8 kierunków)
+- [x] Kamera i viewport
+- [x] **Milestone:** Gracz porusza się po arenie, nie wychodzi poza granice
 
 **Output:** Działająca arena z poruszającym się graczem
 
