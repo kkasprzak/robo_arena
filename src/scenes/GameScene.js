@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../entities/Player.js';
+import Bullet from '../entities/Bullet.js';
 
 export default class GameScene extends Phaser.Scene {
     constructor() {
@@ -13,8 +14,15 @@ export default class GameScene extends Phaser.Scene {
         // Wizualne granice areny
         this.add.rectangle(400, 300, 800, 600, 0x000000, 0).setStrokeStyle(2, 0x00ff00);
 
-        // Tworzenie gracza na środku areny
-        this.player = new Player(this, 400, 300);
+        // Utworzenie grupy pocisków z object pooling
+        this.bulletsGroup = this.physics.add.group({
+            classType: Bullet,
+            maxSize: 50, // Maksymalna liczba pocisków w puli
+            runChildUpdate: true // Automatyczna aktualizacja dzieci
+        });
+
+        // Tworzenie gracza na środku areny (przekazujemy referencję do grupy)
+        this.player = new Player(this, 400, 300, this.bulletsGroup);
 
         // Konfiguracja kamery i viewport
         // Ustawienie granic kamery (równych granicom areny)
@@ -37,18 +45,7 @@ export default class GameScene extends Phaser.Scene {
             this.player.update(time, delta);
         }
 
-        // Aktualizacja pocisków
-        if (this.player && this.player.bullets) {
-            // Aktualizacja każdego pocisku
-            this.player.bullets.forEach(bullet => {
-                if (bullet && bullet.active) {
-                    bullet.update();
-                }
-            });
-            
-            // Czyszczenie zniszczonych pocisków
-            this.player.bullets = this.player.bullets.filter(bullet => bullet && bullet.active);
-        }
+        // Grupa pocisków automatycznie aktualizuje aktywne dzieci (runChildUpdate: true)
     }
 }
 

@@ -14,9 +14,10 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite {
         // Wywołanie konstruktora rodzica
         super(scene, x, y, 'bullet');
 
-        // Dodanie do sceny i fizyki
-        scene.add.existing(this);
-        scene.physics.add.existing(this);
+        // Dodanie do fizyki (jeśli nie jest już dodany przez grupę)
+        if (!this.body) {
+            scene.physics.add.existing(this);
+        }
 
         // Prędkość pocisku
         this.speed = 400;
@@ -48,19 +49,18 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
-        // Auto-destroy po wyjściu poza ekran (z marginesem)
+        // Auto-deactivate po wyjściu poza ekran (z marginesem) - dla object pooling
         const margin = 50;
         if (this.x < -margin || this.x > 800 + margin || 
             this.y < -margin || this.y > 600 + margin) {
-            this.destroy();
+            this.setActive(false);
+            this.setVisible(false);
         }
     }
 
-    // Metoda do niszczenia pocisku
-    destroy() {
-        this.setActive(false);
-        this.setVisible(false);
-        super.destroy();
+    // Metoda do resetowania pocisku (dla object pooling)
+    reset(x, y, targetX, targetY) {
+        this.fire(x, y, targetX, targetY);
     }
 }
 

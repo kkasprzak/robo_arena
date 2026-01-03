@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
-import Bullet from './Bullet.js';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y) {
+    constructor(scene, x, y, bulletsGroup) {
         // Tworzenie placeholder grafiki (kolorowy prostokąt)
         const graphics = scene.add.graphics();
         graphics.fillStyle(0x00ff00); // Zielony kolor
@@ -30,7 +29,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         // System strzelania
         this.shootCooldown = 0;
         this.shootDelay = 150; // ms między strzałami (~6 strzałów/s)
-        this.bullets = []; // Tymczasowa tablica pocisków (w Kroku 3 będzie grupa)
+        this.bulletsGroup = bulletsGroup; // Referencja do grupy pocisków
     }
 
     update(time, delta) {
@@ -77,12 +76,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     shoot(targetX, targetY) {
-        // Tworzenie pocisku na pozycji gracza
-        const bullet = new Bullet(this.scene, this.x, this.y);
-        bullet.fire(this.x, this.y, targetX, targetY);
+        // Pobieranie pocisku z puli (object pooling)
+        // get() zwraca pierwszy nieaktywny pocisk lub tworzy nowy jeśli brak
+        const bullet = this.bulletsGroup.get(this.x, this.y);
         
-        // Dodanie do tymczasowej tablicy (w Kroku 3 będzie grupa)
-        this.bullets.push(bullet);
+        if (bullet) {
+            // Resetowanie pocisku (dla recyklingu) lub pierwsze użycie
+            bullet.reset(this.x, this.y, targetX, targetY);
+        }
     }
 }
 
