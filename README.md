@@ -1,4 +1,4 @@
-33# 🎮 ROBO ARENA
+# 🎮 ROBO ARENA
 
 **Retro top-down shooter built during a 5-hour AI hackathon**
 
