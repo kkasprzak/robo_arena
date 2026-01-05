@@ -1,217 +1,217 @@
-# ROBO ARENA - Plan Implementacji
+# ROBO ARENA - Implementation Plan
 ## Hackathon #1 - 5h Challenge
 
 ---
 
-## 🎮 Koncepcja Gry
+## 🎮 Game Concept
 
-**Nazwa:** ROBO ARENA  
-**Gatunek:** Top-down twin-stick shooter (inspiracja: Llamatron/Robotron)  
-**Styl:** Retro arcade z nowoczesnym twistem
+**Name:** ROBO ARENA  
+**Genre:** Top-down twin-stick shooter (inspired by: Llamatron/Robotron)  
+**Style:** Retro arcade with a modern twist
 
 ### Elevator Pitch
-Gracz kontroluje robota w zamkniętej arenie. Fale wrogich robotów atakują z wszystkich stron. Cel: przetrwać jak najdłużej, zdobyć jak najwięcej punktów, zbierać power-upy i przechodzić przez kolejne fale coraz trudniejszych przeciwników.
+Player controls a robot in a closed arena. Waves of hostile robots attack from all sides. Goal: survive as long as possible, earn as many points as possible, collect power-ups and progress through increasingly difficult waves of enemies.
 
-### Główne Mechaniki
-- **Ruch:** 8-kierunkowy ruch (WASD lub strzałki)
-- **Strzelanie:** Automatyczne strzały w kierunku kursora myszy (twin-stick feel)
-- **Wrogowie:** Różne typy robotów z prostą AI (chase player)
-- **Power-upy:** Losowe drop'y zwiększające możliwości gracza
-- **System fal:** Rosnąca trudność, więcej wrogów
+### Core Mechanics
+- **Movement:** 8-directional movement (WASD or arrows)
+- **Shooting:** Auto-aim shots toward mouse cursor (twin-stick feel)
+- **Enemies:** Different types of robots with simple AI (chase player)
+- **Power-ups:** Random drops that increase player capabilities
+- **Wave system:** Increasing difficulty, more enemies
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Główne Technologie
-- **Silnik:** Phaser 3 (v3.80+)
-- **Język:** JavaScript/TypeScript (dla szybkości: JavaScript)
+### Main Technologies
+- **Engine:** Phaser 3 (v3.80+)
+- **Language:** JavaScript/TypeScript (for speed: JavaScript)
 - **Runtime:** Browser (Chrome/Firefox)
-- **Build:** Vite (szybki dev server + hot reload)
+- **Build:** Vite (fast dev server + hot reload)
 
-### Uzasadnienie
-- ✅ Phaser 3 = zero setup dla fizyki, kolizji, sprite'ów
-- ✅ Browser = instant testing, łatwy deploy
-- ✅ Vite = natychmiastowy reload, minimalna konfiguracja
-- ✅ JavaScript = szybsze pisanie niż TypeScript (w 5h liczy się każda minuta)
+### Rationale
+- ✅ Phaser 3 = zero setup for physics, collisions, sprites
+- ✅ Browser = instant testing, easy deploy
+- ✅ Vite = instant reload, minimal configuration
+- ✅ JavaScript = faster to write than TypeScript (in 5h every minute counts)
 
-### Assety
-- **Grafika:** Kenney.nl (darmowe pixel art) + placeholdery (kolorowe kształty)
-- **Dźwięki:** jsfxr.com (generowanie prostych efektów) - OPCJONALNE
-- **Czcionki:** System fonts lub Google Fonts
+### Assets
+- **Graphics:** Kenney.nl (free pixel art) + placeholders (colored shapes)
+- **Sounds:** jsfxr.com (generating simple effects) - OPTIONAL
+- **Fonts:** System fonts or Google Fonts
 
 ---
 
-## 📋 MVP Scope - Funkcjonalności Kluczowe
+## 📋 MVP Scope - Key Features
 
 ### MUST HAVE (Core MVP)
-1. ✅ **Gracz**
-   - Ruch w 8 kierunkach
-   - Sprite z animacją (lub prosty placeholder)
-   - HP system (3-5 życia)
+1. ✅ **Player**
+   - 8-directional movement
+   - Sprite with animation (or simple placeholder)
+   - HP system (3-5 lives)
    
-2. ✅ **Strzelanie**
-   - Pociski lecą w kierunku kursora
-   - Auto-fire (przytrzymanie przycisku lub ciągłe strzały)
-   - Kolizje pocisk-wróg
+2. ✅ **Shooting**
+   - Bullets fly toward cursor
+   - Auto-fire (hold button or continuous shots)
+   - Bullet-enemy collisions
    
-3. ✅ **Wrogowie**
-   - Minimum 1 typ wroga (podstawowy chase AI)
-   - Spawning z krawędzi areny
-   - HP i śmierć wroga
-   - Kolizja z graczem (damage)
+3. ✅ **Enemies**
+   - Minimum 1 enemy type (basic chase AI)
+   - Spawning from arena edges
+   - HP and enemy death
+   - Collision with player (damage)
    
 4. ✅ **Arena**
-   - Ograniczone granice (prostokąt)
-   - Bouncing lub hard stop przy krawędziach
+   - Limited boundaries (rectangle)
+   - Bouncing or hard stop at edges
    
 5. ✅ **Game Loop**
    - Start screen
-   - Game Over screen zScore
+   - Game Over screen with Score
    - Restart button
-   - System punktacji
+   - Scoring system
    
-6. ✅ **System fal**
+6. ✅ **Wave system**
    - Wave counter
-   - Rosnąca liczba wrogów
-   - Krótka przerwa między falami
+   - Increasing number of enemies
+   - Short break between waves
 
 ### NICE TO HAVE (Polish)
-7. 🎨 **Power-upy**
+7. 🎨 **Power-ups**
    - Speed boost
    - Fire rate boost
    - Shield/temporary invincibility
    - Multi-shot
    
-8. 🎨 **Różnorodność wrogów**
-   - Fast enemy (mały, szybki)
-   - Tank enemy (duży, wolny, więcej HP)
-   - Shooter enemy (strzela do gracza)
+8. 🎨 **Enemy Variety**
+   - Fast enemy (small, fast)
+   - Tank enemy (big, slow, more HP)
+   - Shooter enemy (shoots at player)
    
 9. 🎨 **Visual Polish**
-   - Particle effects (eksplozje)
+   - Particle effects (explosions)
    - Screen shake
    - Health bar UI
    - Better sprites/animations
    
 10. 🎨 **Audio**
-    - Strzały
-    - Eksplozje
+    - Shots
+    - Explosions
     - Ambient music
 
-### OUT OF SCOPE (Zostawiamy)
+### OUT OF SCOPE (We Skip)
 - ❌ Multiplayer
-- ❌ Proceduralne levele
+- ❌ Procedural levels
 - ❌ Boss fights
 - ❌ Upgrade system / meta progression
 - ❌ Story/cutscenes
-- ❌ High score persistence (localStorage - możliwe tylko jeśli zostanie czas)
+- ❌ High score persistence (localStorage - possible only if time permits)
 
 ---
 
-## ⏱️ Timeline - Podział na Etapy (5h)
+## ⏱️ Timeline - Stage Breakdown (5h)
 
-### 🕐 ETAP 1: Setup & Fundament (60 min) - 10:00-11:00
-**Cel:** Działający projekt z graczem poruszającym się po arenie
+### 🕐 STAGE 1: Setup & Foundation (60 min) - 10:00-11:00
+**Goal:** Working project with player moving around arena
 
-- [x] Setup projektu (Vite + Phaser 3)
-- [x] Podstawowa struktura plików
-- [x] Stworzenie areny (granice)
-- [x] Gracz sprite + ruch (8 kierunków)
-- [x] Kamera i viewport
-- [x] **Milestone:** Gracz porusza się po arenie, nie wychodzi poza granice
+- [x] Project setup (Vite + Phaser 3)
+- [x] Basic file structure
+- [x] Create arena (boundaries)
+- [x] Player sprite + movement (8 directions)
+- [x] Camera and viewport
+- [x] **Milestone:** Player moves around arena, doesn't go beyond boundaries
 
-**Output:** Działająca arena z poruszającym się graczem
-
----
-
-### 🕑 ETAP 2: Combat System (60 min) - 11:00-12:00
-**Cel:** Gracz strzela, wrogowie się spawną i umierają
-
-- [x] System strzelania (pociski w kierunku kursora)
-- [x] Spawning wrogów (losowe pozycje przy krawędziach)
-- [x] Podstawowa AI wroga (chase player)
-- [x] Kolizje: pocisk-wróg, wróg-gracz
-- [x] Śmierć wroga (znika + punkty)
-- [x] HP gracza (damage od wrogów)
-- [x] **Milestone:** Można zabijać wrogów i otrzymywać damage
-
-**Output:** Działający combat loop
+**Output:** Working arena with moving player
 
 ---
 
-### 🕒 ETAP 3: Game Loop & Waves (60 min) - 12:00-13:00
-**Cel:** Kompletna gra z początkiem, końcem i systemem fal
+### 🕑 STAGE 2: Combat System (60 min) - 11:00-12:00
+**Goal:** Player shoots, enemies spawn and die
+
+- [x] Shooting system (bullets toward cursor)
+- [x] Enemy spawning (random positions at edges)
+- [x] Basic enemy AI (chase player)
+- [x] Collisions: bullet-enemy, enemy-player
+- [x] Enemy death (disappears + points)
+- [x] Player HP (damage from enemies)
+- [x] **Milestone:** Can kill enemies and receive damage
+
+**Output:** Working combat loop
+
+---
+
+### 🕒 STAGE 3: Game Loop & Waves (60 min) - 12:00-13:00
+**Goal:** Complete game with beginning, end and wave system
 
 - [x] Start screen (Play button)
 - [x] Game Over screen (Score + Restart)
-- [x] System punktacji (UI)
-- [x] Wave system (licznik fali, rosnąca trudność)
-- [x] Przerwy między falami (3-5 sekund)
-- [x] HP UI (serca/bar)
-- [x] **Milestone:** Można zagrać pełną rundę od start do game over
+- [x] Scoring system (UI)
+- [x] Wave system (wave counter, increasing difficulty)
+- [x] Breaks between waves (3-5 seconds)
+- [x] HP UI (hearts/bar)
+- [x] **Milestone:** Can play full round from start to game over
 
-**Output:** Kompletny game loop MVP
+**Output:** Complete game loop MVP
 
 ---
 
-### 🕓 ETAP 4: Polish & Features (60 min) - 13:00-14:00
-**Cel:** Dodanie power-upów, efektów, różnorodności
+### 🕓 STAGE 4: Polish & Features (60 min) - 13:00-14:00
+**Goal:** Adding power-ups, effects, variety
 
-- [x] Power-upy (minimum 2 typy)
+- [x] Power-ups (minimum 2 types)
   - Speed boost
   - Fire rate boost
-- [x] Drugi typ wroga (np. fast enemy)
-- [x] Particle effects (eksplozje przy śmierci)
-- [x] Screen shake (przy trafieniu gracza)
-- [x] Lepsze sprites/kolory
-- [ ] Sound effects (opcjonalnie, jeśli szybko idzie)
-- [x] **Milestone:** Gra jest "juicy" i przyjemna w graniu
+- [x] Second enemy type (e.g., fast enemy)
+- [x] Particle effects (explosions on death)
+- [x] Screen shake (when player is hit)
+- [x] Better sprites/colors
+- [ ] Sound effects (optional, if time permits)
+- [x] **Milestone:** Game is "juicy" and fun to play
 
-**Output:** Wypolerowana gra z efektami
+**Output:** Polished game with effects
 
 ---
 
-### 🕔 ETAP 5: Finalizacja & Deploy (60 min) - 14:00-15:00
-**Cel:** Bug fixing, balans, deploy
+### 🕔 STAGE 5: Finalization & Deploy (60 min) - 14:00-15:00
+**Goal:** Bug fixing, balance, deploy
 
-- [ ] Testing i bug fixing
-- [ ] Balansowanie (HP, damage, spawn rate)
-- [ ] Dodatkowe efekty wizualne jeśli czas pozwoli
-- [ ] Instrukcja sterowania (overlay/start screen)
-- [ ] Build produkcyjny
+- [ ] Testing and bug fixing
+- [ ] Balancing (HP, damage, spawn rate)
+- [ ] Additional visual effects if time permits
+- [ ] Control instructions (overlay/start screen)
+- [ ] Production build
 - [ ] Deploy (GitHub Pages / Netlify / itch.io)
-- [ ] **Milestone:** Gra jest gotowa do pokazania i grania!
+- [ ] **Milestone:** Game is ready to show and play!
 
-**Output:** Deployed, działające MVP dostępne online
-
----
-
-## 🎯 Kryteria Sukcesu
-
-### Minimum Viable Product (MUSI działać)
-- ✅ Gracz może się poruszać i strzelać
-- ✅ Wrogowie się spawną i atakują
-- ✅ Można zabijać wrogów i otrzymywać punkty
-- ✅ System fal działa
-- ✅ Game Over i restart działają
-- ✅ Gra jest grywalna przez minimum 2-3 minuty
-
-### Success Indicators (Dodatkowo)
-- 🎨 Gra wygląda przyzwoicie (kolory, efekty)
-- 🎨 Jest minimum 1 power-up
-- 🎨 Jest minimum 2 typy wrogów
-- 🎨 Gra jest deployed i dostępna online
+**Output:** Deployed, working MVP available online
 
 ---
 
-## 📁 Struktura Projektu (Planowana)
+## 🎯 Success Criteria
+
+### Minimum Viable Product (MUST work)
+- ✅ Player can move and shoot
+- ✅ Enemies spawn and attack
+- ✅ Can kill enemies and receive points
+- ✅ Wave system works
+- ✅ Game Over and restart work
+- ✅ Game is playable for at least 2-3 minutes
+
+### Success Indicators (Additionally)
+- 🎨 Game looks decent (colors, effects)
+- 🎨 There is at least 1 power-up
+- 🎨 There are at least 2 enemy types
+- 🎨 Game is deployed and available online
+
+---
+
+## 📁 Project Structure (Planned)
 
 ```
 svc-colabroom/
 ├── .ai/
 │   ├── Hackathon #1.md
-│   └── plan.md (ten plik)
+│   └── plan.md (this file)
 ├── src/
 │   ├── main.js              # Entry point
 │   ├── scenes/
@@ -239,33 +239,32 @@ svc-colabroom/
 
 ---
 
-## 🚀 Następne Kroki
+## 🚀 Next Steps
 
-1. **Utworzyć strukturę projektu**
-2. **Zainstalować dependencies (Phaser 3 + Vite)**
-3. **Rozpocząć ETAP 1: Setup & Fundament**
-
----
-
-## 📝 Notatki i Decyzje
-
-### Decyzje Techniczne
-- **Strzelanie:** Kierunek = pozycja kursora (intuicyjniejsze niż 8 kierunków)
-- **AI wrogów:** Prosty "chase player" z pathfinding w linii prostej
-- **Spawning:** Z krawędzi areny (poza ekranem), losowe pozycje
-- **Kolizje:** Phaser Arcade Physics (najprostsze, wystarczające)
-
-### Usprawnienia AI Workflow
-- Używać Cursor AI do generowania boilerplate
-- Promptować konkretne funkcjonalności po kolei
-- Testować często (co 15-20 min)
-- Commitować po każdym działającym milestone
+1. **Create project structure**
+2. **Install dependencies (Phaser 3 + Vite)**
+3. **Start STAGE 1: Setup & Foundation**
 
 ---
 
-**Czas startu:** 10:00  
+## 📝 Notes and Decisions
+
+### Technical Decisions
+- **Shooting:** Direction = cursor position (more intuitive than 8 directions)
+- **Enemy AI:** Simple "chase player" with straight-line pathfinding
+- **Spawning:** From arena edges (off-screen), random positions
+- **Collisions:** Phaser Arcade Physics (simplest, sufficient)
+
+### AI Workflow Improvements
+- Use Cursor AI to generate boilerplate
+- Prompt specific features one by one
+- Test frequently (every 15-20 min)
+- Commit after each working milestone
+
+---
+
+**Start time:** 10:00  
 **Deadline:** 15:00  
 **Status:** ⏳ READY TO START
 
 Let's go! 🚀
-

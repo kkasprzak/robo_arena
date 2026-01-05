@@ -1,55 +1,55 @@
-# Top Gun dla AI w kodowaniu – Hackathon #1  
-## Wyzwanie: Gra 2D / lekka 3D z wykorzystaniem AI
+# Top Gun for AI in Coding – Hackathon #1  
+## Challenge: 2D Game / Light 3D Using AI
 
-### 🎯 Cel hackathonu
-W ciągu **5 godzin (10:00–15:00)** dostarczyć **działające MVP gry**, wykorzystując asystenta AI jako realne wsparcie w projektowaniu, kodowaniu i iterowaniu rozwiązania.
+### 🎯 Hackathon Goal
+In **5 hours (10:00–15:00)** deliver a **working game MVP**, using AI assistant as real support in designing, coding and iterating the solution.
 
-Nie chodzi o „najładniejszą” ani „najbardziej rozbudowaną” grę, tylko o:
-- szybkość dowiezienia działającego rozwiązania (MVP),
-- sprytne workflowy pracy z AI,
-- umiejętność wyjścia poza strefę komfortu bez overengineeringu.
-
----
-
-### 🕹️ Co budujemy
-- Grę **2D** (rekomendowane) lub **bardzo prostą 3D** (dla chętnych na większe ryzyko).
-- Gra powinna być **grywalna** — da się w nią faktycznie zagrać (nawet jeśli tylko przez chwilę).
+It's not about the "prettiest" or "most elaborate" game, but about:
+- speed of delivering a working solution (MVP),
+- smart workflows with AI,
+- ability to step outside comfort zone without overengineering.
 
 ---
 
-### 🛠️ Technologia
-- **Dowolna technologia / silnik** — wybór należy do uczestników.
-- Rekomendacje (nie obowiązkowe):
+### 🕹️ What We're Building
+- A **2D game** (recommended) or **very simple 3D** (for those willing to take bigger risk).
+- Game should be **playable** — you can actually play it (even if just for a moment).
+
+---
+
+### 🛠️ Technology
+- **Any technology / engine** — choice belongs to participants.
+- Recommendations (not mandatory):
   - browser / **Canvas / WebGL**,
-  - silniki/frameworki z gotową fizyką (np. Phaser, Babylon.js, Three.js, Godot – web export).
-- Assety:
-  - można korzystać z gotowych assetów (np. itch.io, Kenney, generowane przez AI, MCP itp.),
-  - **grafika nie jest kryterium oceny** — liczy się dowiezienie MVP.
+  - engines/frameworks with ready-made physics (e.g., Phaser, Babylon.js, Three.js, Godot – web export).
+- Assets:
+  - can use ready-made assets (e.g., itch.io, Kenney, AI-generated, MCP, etc.),
+  - **graphics are not evaluation criteria** — what matters is delivering MVP.
 
 ---
 
-### 🎮 Tryb gry
-- **Singleplayer lub multiplayer** — dowolnie.
-- Brak narzuconego gatunku:
-  - platformówka, arcade, puzzle, shooter, symulator itd.
+### 🎮 Game Mode
+- **Singleplayer or multiplayer** — any choice.
+- No enforced genre:
+  - platformer, arcade, puzzle, shooter, simulator, etc.
 
 ---
 
-### ⏱️ Ograniczenia i zasady
-- **Czas jest kluczowym constraintem** — projektuj tak, żeby dowieźć coś działającego.
-- Asystent AI jest **pełnoprawnym narzędziem pracy**, m.in. do:
-  - generowania kodu,
-  - refaktoryzacji,
-  - debugowania,
-  - wymyślania mechanik,
-  - tworzenia assetów / placeholderów.
-- Nie oceniamy „ilości AI”, tylko **efektywność jego użycia**.
+### ⏱️ Constraints and Rules
+- **Time is the key constraint** — design so you can deliver something working.
+- AI assistant is a **full-fledged work tool**, including for:
+  - code generation,
+  - refactoring,
+  - debugging,
+  - inventing mechanics,
+  - creating assets / placeholders.
+- We don't evaluate "amount of AI", only **efficiency of its use**.
 
 ---
 
-### 🧠 Co omawiamy po hackathonie
-Po zakończeniu skupimy się na:
-- workflowach pracy z AI, które działały najlepiej,
-- promptach i iteracjach, które realnie przyspieszały pracę,
-- miejscach, gdzie AI pomogło vs. przeszkodziło,
-- wnioskach do wspólnego **playbooka pracy z AI**.
+### 🧠 What We Discuss After Hackathon
+After completion we'll focus on:
+- AI workflows that worked best,
+- prompts and iterations that actually accelerated work,
+- places where AI helped vs. hindered,
+- conclusions for a shared **AI work playbook**.
